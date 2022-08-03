@@ -18,7 +18,10 @@ export const carritoSlice = createSlice({
       const { id, nombre } = action.payload;
       //si el carrito no tiene elementos, le agregamos uno.
       if (state.carrito.length === 0) {
-        return { ...state, carrito: [{ id: id, nombre: nombre, cantidad: 1 }] };
+        return {
+          ...state,
+          carrito: [{ id: id, nombre: nombre, cantidad: 1 }],
+        };
       } else {
         // Si ya tiene el producto, actualizamos su valor
         // Si no tiene el producto, lo agregamos.
@@ -57,8 +60,26 @@ export const carritoSlice = createSlice({
         };
       }
     },
-    quitar: (state) => {
-      if (state.producto1 > 0) state.producto1 -= 1;
+    quitar: (state, action) => {
+      const { id, nombre } = action.payload;
+      if (state.carrito.length > 0) {
+        const nuevoCarrito = [...state.carrito];
+        nuevoCarrito.forEach((producto, index) => {
+          if (producto.id === id && producto.cantidad > 0) {
+            const cantidad = nuevoCarrito[index].cantidad;
+            nuevoCarrito[index] = {
+              id,
+              nombre,
+              cantidad: cantidad - 1,
+            };
+          }
+          if (producto.cantidad === 0) nuevoCarrito[index].enCarrito = false;
+        });
+        const carritoFiltrado = nuevoCarrito.filter(
+          (producto) => producto.cantidad > 0
+        );
+        return { ...state, carrito: carritoFiltrado };
+      }
     },
   },
 });

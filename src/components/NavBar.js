@@ -8,7 +8,16 @@ import {
   GoogleAuthProvider,
   browserSessionPersistence,
 } from "firebase/auth";
-import { Container, Navbar, NavDropdown, Nav, Row } from "react-bootstrap";
+import {
+  Container,
+  Navbar,
+  NavDropdown,
+  Button,
+  OverlayTrigger,
+  Popover,
+  Nav,
+  Row,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserIsLogin, setUserUnLog } from "../store/auth";
 
@@ -70,19 +79,51 @@ const NavBar = () => {
               >
                 Carrito
               </NavLink>
-              <NavDropdown title="Iniciar Sesion" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Divider />
-                {isLogin ? (
-                  <NavDropdown.Item onClick={desloguear}>
-                    Cerrar Sesion
-                  </NavDropdown.Item>
-                ) : (
-                  <NavDropdown.Item onClick={loguear}>
-                    Iniciar Sesion
-                  </NavDropdown.Item>
-                )}
-              </NavDropdown>
+              <OverlayTrigger
+                trigger="click"
+                placement="bottom"
+                overlay={
+                  <Popover id={`popover-positioned-bottom`}>
+                    {isLogin && (
+                      <Popover.Header as="h3">
+                        Hola {user.nombre}!
+                      </Popover.Header>
+                    )}
+                    <Popover.Body>
+                      {isLogin ? (
+                        <>
+                          <Button variant="text">Mis pedidos</Button>
+                          <Button variant="text" onClick={desloguear}>
+                            Cerrar Sesion
+                          </Button>
+                        </>
+                      ) : (
+                        <Button variant="text" onClick={loguear}>
+                          Iniciar Sesion con gmail
+                        </Button>
+                      )}
+                    </Popover.Body>
+                  </Popover>
+                }
+              >
+                <Button
+                  variant="text"
+                  className="fs-4 p-0 text-start text-light"
+                >
+                  {isLogin ? (
+                    <>
+                      {user.nombre}
+                      <img
+                        src={user.img}
+                        alt="profile"
+                        className="rounded-circle ms-2 w-25"
+                      />
+                    </>
+                  ) : (
+                    "Iniciar Sesion"
+                  )}
+                </Button>
+              </OverlayTrigger>
             </Nav>
           </Navbar.Collapse>
         </Container>

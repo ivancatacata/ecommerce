@@ -30,7 +30,9 @@ const Carrito = () => {
       ) : (
         <p>NO HAY NADA TETON</p>
       )}
-      <button onClick={comprar}>Comprar</button>
+      <button onClick={comprar} disabled={carrito.length == 0}>
+        Comprar
+      </button>
     </Container>
   );
 };
